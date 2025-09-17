@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ AI Forge</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        :root {
+            --dark-bg: #0d0d1a;
+            --accent-glow: #3af2ff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--dark-bg);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            position: relative;
+        }
+
+        /* Animated Rainbow Gradient Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, #ff6b6b, #feca57, #ff9f1a, #55efc4, #81ecec, #74b9ff, #a29bfe, #fd79a8);
+            background-size: 400% 400%;
+            animation: gradient-shift 30s ease infinite;
+            z-index: -1;
+            opacity: 0.9;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* AI Icon Button Styling */
+        .ai-credits-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+            background-color: rgba(58, 242, 255, 0.1);
+            border: 2px solid var(--accent-glow);
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease-in-out;
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(58, 242, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+        }
+
+        .ai-credits-btn:hover {
+            background-color: var(--accent-glow);
+            box-shadow: 0 0 15px var(--accent-glow), 0 0 25px var(--accent-glow);
+            transform: scale(1.1);
+        }
+
+        .ai-credits-btn svg {
+            color: var(--accent-glow);
+            width: 24px;
+            height: 24px;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .ai-credits-btn:hover svg {
+            color: var(--dark-bg);
+        }
+
+        /* Modal Customization */
+        .modal-content {
+            background-color: var(--dark-bg);
+            border: 1px solid var(--accent-glow);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid rgba(58, 242, 255, 0.4);
+        }
+
+        .modal-title {
+            color: var(--accent-glow);
+        }
+
+        .modal-footer {
+            border-top: 1px solid rgba(58, 242, 255, 0.4);
+        }
+
+        .btn-close {
+            filter: invert(1) brightness(1.5);
+        }
+
+        /* Main content styling */
+        .content-wrapper {
+            background-color: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 40px rgba(0, 242, 255, 0.1);
+            animation: fadeIn 1.5s ease-in-out;
+            margin: 2rem auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Hero Section & Logo */
+        .hero-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo-title-container {
+            display: flex;
+            flex-direction: row; /* logo before title */
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .hero-section h1 {
+            font-size: 3.5rem;
+            margin: 0;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px var(--accent-glow), 0 0 10px var(--accent-glow);
+            animation: pulse-glow 3s infinite ease-in-out;
+        }
+
+        .hero-section p {
+            font-size: 1.25rem;
+            color: #b0b0b0;
+            margin-top: 1rem;
+        }
+
+        /* AI Logo */
+        .ai-logo {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 4rem;
+            color: var(--accent-glow);
+            text-shadow: 0 0 5px var(--accent-glow);
+            animation: pulse-glow 3s infinite ease-in-out;
+        }
+
+        /* Category Buttons */
+        .categories-section .row {
+            justify-content: center;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .category-button {
+            background-color: rgba(58, 242, 255, 0.1);
+            color: var(--accent-glow);
+            border: 2px solid var(--accent-glow);
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: all 0.3s ease-in-out;
+            text-transform: uppercase;
+            box-shadow: 0 0 8px rgba(58, 242, 255, 0.4);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .category-button:hover {
+            background-color: var(--accent-glow);
+            color: var(--dark-bg);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 0 15px var(--accent-glow), 0 0 25px var(--accent-glow);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 767px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+            .hero-section p {
+                font-size: 1rem;
+            }
+            .content-wrapper {
+                padding: 1.5rem;
+                margin: 1rem auto;
+            }
+            .category-button {
+                width: 100%;
+                margin: 0.5rem 0;
+            }
+            .categories-section .row {
+                flex-direction: column;
+                gap: 0;
+            }
+            .logo-title-container {
+                flex-direction: column; /* stack logo above on small screens */
+                gap: 0.5rem;
+            }
+            .ai-logo {
+                width: 60px;
+                height: 60px;
+                font-size: 3rem;
+            }
+            .ai-credits-btn {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+            }
+            .ai-credits-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+        }
+
+        /* Keyframe Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { text-shadow: 0 0 5px var(--accent-glow), 0 0 10px var(--accent-glow); }
+            50% { text-shadow: 0 0 10px var(--accent-glow), 0 0 15px var(--accent-glow); }
+        }
+    </style>
+</head>
+<body>
+    <a href="#" class="ai-credits-btn" data-bs-toggle="modal" data-bs-target="#creditsModal">
+        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 14 14"><path fill="#000000" fill-rule="evenodd" d="M9.29.77c.183-.837 1.375-.842 1.566-.006l.009.04l.018.077c.22.938.979 1.655 1.93 1.82c.873.152.873 1.406 0 1.558a2.406 2.406 0 0 0-1.934 1.835l-.023.102c-.19.836-1.383.831-1.567-.006l-.019-.088a2.39 2.39 0 0 0-1.926-1.845c-.871-.151-.871-1.403 0-1.554A2.39 2.39 0 0 0 9.268.868l.014-.064zM7.156 5.334a1.969 1.969 0 0 1-.697-.257H3.942A3 3 0 0 0 .96 7.745l-.4 3.608a2.247 2.247 0 0 0 4.24 1.253l.354-.707H8.08l.353.707a2.246 2.246 0 0 0 4.242-1.253l-.4-3.608a2.99 2.99 0 0 0-.387-1.175c-.542 1.842-3.242 1.786-3.665-.147l-.02-.088a1.298 1.298 0 0 0-1.045-1.001ZM4.684 7.513a.625.625 0 1 0-1.25 0v.512h-.512a.625.625 0 0 0 0 1.25h.512v.512a.625.625 0 0 0 1.25 0v-.512h.512a.625.625 0 1 0 0-1.25h-.512zm4.75 1.746a.61.61 0 1 1-1.218 0a.61.61 0 0 1 1.218 0" clip-rule="evenodd"/></svg>
+    </a>
+
+    <div class="container-fluid d-flex flex-column min-vh-100 p-0">
+        <div class="content-wrapper text-center mx-auto my-5">
+            <header class="hero-section">
+                <div class="logo-title-container">
+                    <div class="ai-logo">✨</div>
+                    <h1 class="display-3 fw-bold">AI Forge</h1>
+                </div>
+                <p class="lead">Forge your prompts in a realm of pure AI potential. A place where ideas are born and creativity flows endlessly.</p>
+            </header>
+
+            <main class="categories-section">
+                <h2 class="mt-5 mb-4 text-white">Access the Forges</h2>
+                <div class="row justify-content-center">
+                    <a href="men.html" class="category-button">Men</a>
+                    <a href="women.html" class="category-button">Women</a>
+                    <a href="couple.html" class="category-button">Couples</a>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="creditsModal" tabindex="-1" aria-labelledby="creditsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="creditsModalLabel">Credits</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="lead fw-bold">Built by RK</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <p class="m-0">Thank you for visiting.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

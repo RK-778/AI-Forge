@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Forge - Men</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --dark-bg: #0d0d1a;
+            --accent-glow: #3af2ff;
+            --card-bg: rgba(10, 10, 10, 0.6);
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--dark-bg);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            position: relative;
+        }
+
+        /* Animated Rainbow Gradient Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, #ff6b6b, #feca57, #ff9f1a, #55efc4, #81ecec, #74b9ff, #a29bfe, #fd79a8);
+            background-size: 400% 400%;
+            animation: gradient-shift 30s ease infinite;
+            z-index: -1;
+            opacity: 0.9;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* AI Icon Button Styling */
+        .ai-credits-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+            background-color: transparent;
+            border: 2px solid rgba(58, 242, 255, 0.1);
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease-in-out;
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(58, 242, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+        }
+
+        .ai-credits-btn:hover {
+            background-color: var(--accent-glow);
+            box-shadow: 0 0 15px var(--accent-glow), 0 0 25px var(--accent-glow);
+            transform: scale(1.1);
+        }
+
+        .ai-credits-btn svg {
+            color: var(--accent-glow);
+            width: 24px;
+            height: 24px;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .ai-credits-btn:hover svg {
+            color: var(--dark-bg);
+        }
+
+        /* Modal Customization */
+        .modal-content {
+            background-color: var(--dark-bg);
+            border: 1px solid var(--accent-glow);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid rgba(58, 242, 255, 0.4);
+        }
+
+        .modal-title {
+            color: var(--accent-glow);
+        }
+
+        .btn-close {
+            filter: invert(1) brightness(1.5);
+        }
+
+        .modal-body p {
+            font-size: 1.1rem;
+        }
+
+        /* Main Container */
+        .prompts-grid {
+            padding: 2rem;
+        }
+
+        /* Card Styling */
+        .image-card {
+            background-color: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.05);
+            width: 100%;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .image-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 242, 255, 0.15);
+        }
+
+        .image-container {
+            width: 100%;
+            padding-bottom: 100%;
+            position: relative;
+            background-color: #1a1a2e;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(58, 242, 255, 0.1);
+            transition: border 0.3s ease-in-out;
+        }
+
+        .image-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .prompt-text {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            background-color: #1a1a2e;
+            color: #b0b0b0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(58, 242, 255, 0.1);
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .copy-btn {
+            background-color: rgba(58, 242, 255, 0.2);
+            color: var(--accent-glow);
+            border: 2px solid var(--accent-glow);
+            border-radius: 8px;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease-in-out;
+            width: 100%;
+            text-align: center;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--accent-glow);
+            color: var(--dark-bg);
+            box-shadow: 0 0 15px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        .copy-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 767px) {
+            .image-card {
+                padding: 1rem;
+            }
+            .prompts-grid {
+                padding: 1rem;
+            }
+            .ai-credits-btn {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+            }
+            .ai-credits-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+            .prompt-text {
+                padding: 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="#" class="ai-credits-btn" data-bs-toggle="modal" data-bs-target="#creditsModal">
+        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 14 14"><path fill="#000000" fill-rule="evenodd" d="M9.29.77c.183-.837 1.375-.842 1.566-.006l.009.04l.018.077c.22.938.979 1.655 1.93 1.82c.873.152.873 1.406 0 1.558a2.406 2.406 0 0 0-1.934 1.835l-.023.102c-.19.836-1.383.831-1.567-.006l-.019-.088a2.39 2.39 0 0 0-1.926-1.845c-.871-.151-.871-1.403 0-1.554A2.39 2.39 0 0 0 9.268.868l.014-.064zM7.156 5.334a1.969 1.969 0 0 1-.697-.257H3.942A3 3 0 0 0 .96 7.745l-.4 3.608a2.247 2.247 0 0 0 4.24 1.253l.354-.707H8.08l.353.707a2.246 2.246 0 0 0 4.242-1.253l-.4-3.608a2.99 2.99 0 0 0-.387-1.175c-.542 1.842-3.242 1.786-3.665-.147l-.02-.088a1.298 1.298 0 0 0-1.045-1.001ZM4.684 7.513a.625.625 0 1 0-1.25 0v.512h-.512a.625.625 0 0 0 0 1.25h.512v.512a.625.625 0 0 0 1.25 0v-.512h.512a.625.625 0 1 0 0-1.25h-.512zm4.75 1.746a.61.61 0 1 1-1.218 0a.61.61 0 0 1 1.218 0" clip-rule="evenodd"/></svg>
+    </a>
+
+    <div class="modal fade" id="creditsModal" tabindex="-1" aria-labelledby="creditsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="creditsModalLabel">Credits</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="lead fw-bold">Built by RK</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="prompts-grid container-fluid">
+        <div class="row" id="prompts-container">
+            </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const prompts = [
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A stoic knight in shining armor, standing on a misty mountain peak overlooking a vast kingdom. Epic fantasy, high detail, medieval setting."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "An astronaut exploring a vibrant, alien world, with strange flora and a glowing sky. Science fiction, unreal engine, hyper-detailed."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A handsome man with a sharp jawline and a stylish haircut, wearing a sleek leather jacket, standing in a futuristic cityscape at night. High detail, cinematic lighting."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A rugged adventurer with a beard and a determined look, hiking through a dense, sunlit forest. Photorealistic, 8K resolution, dynamic pose."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A business professional in a modern suit, looking out over a bustling city from a skyscraper window. Elegant, cinematic, and professional."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A male model with a trendy street-style outfit, posing in front of a colorful graffiti wall. Urban photography, vibrant colors."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "An athletic man performing a workout on a beach at sunrise. Detailed muscular definition, golden hour lighting, action shot."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A man playing a guitar on a rustic porch, with a warm, cozy atmosphere. Soft lighting, detailed textures, candid shot."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A wizard casting a spell in a magical forest, light from his hands illuminating the trees. Fantasy, intricate details, glowing effects."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A cyberpunk hacker in a neon-lit alleyway, holographic displays floating around him. Sci-fi, futuristic, dark and moody."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A majestic lion standing proudly on a rocky outcrop in the Serengeti at sunset. The sky is a canvas of vibrant oranges and pinks. Wildlife photography, highly detailed, golden hour."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A futuristic cityscape at night with flying cars, holographic advertisements, and towering skyscrapers. The streets are busy, and the neon lights create a vibrant atmosphere. Sci-fi, cinematic."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A close-up of a steaming cup of coffee on a wooden table. A book and a pair of glasses are in the soft-focus background. Warm, cozy, detailed, and photorealistic."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A lone traveler sitting by a campfire in a vast, snowy mountain range at night. A billion stars are visible in the clear sky. Epic, serene, and adventurous."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A high-speed race car zooming down a track, with motion blur on the background and a sharp focus on the car. The colors are vibrant and dynamic. Action shot, motorsports."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A beautiful, magical cottage in a sunlit fairy forest. The cottage is made of twisted tree branches and covered in glowing moss. Fantasy, whimsical, and enchanting."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "An abstract painting with bold, swirling colors, thick brush strokes, and a lot of texture. The focus is on the vibrant colors and the dynamic movement of the painting."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A detailed, macro shot of a single drop of rain on a green leaf after a storm. The light is soft, and the detail is sharp. Nature, calm, and serene."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A majestic bald eagle in flight over a rugged, forested mountain range. The eagle's feathers are detailed, and its gaze is intense. Wildlife, high detail, action shot."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "An old, classic car from the 1950s parked on a quiet, nostalgic street at dusk. The streetlights are glowing, and the scene is moody. Vintage, cinematic, and calm."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A bustling market in a bustling Moroccan city, with vibrant spices, colorful textiles, and smiling vendors. The light is warm, and the atmosphere is lively. Travel, high detail, vibrant."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A futuristic robot serving a drink in a sleek, minimalist bar. The robot is highly detailed, with glowing blue lights. The bar has a modern, elegant design. Sci-fi, clean, and stylish."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A close-up of a single, flawless red rose in a glass vase. The background is a soft, blurred green. The lighting is soft and natural. Elegant, floral, and romantic."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A dramatic storm cloud gathering over a serene, open wheat field. The colors are muted, and the lighting is moody. The atmosphere is tense and powerful. Weather, nature, cinematic."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A cozy log cabin in a snowy forest, with warm light spilling from its windows. Smoke rises from the chimney, and the trees are covered in white snow. Peaceful, winter, and comfortable."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A group of friends laughing and taking a selfie in front of a famous monument in Rome. The background is bustling with tourists. Casual, travel, and candid."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A magical waterfall cascading down a cliff face, with vibrant, bioluminescent flora all around. The light is glowing and surreal. Fantasy, enchanting, high detail."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A close-up of a delicious, gourmet burger with a perfectly grilled patty, melted cheese, and fresh vegetables. The lighting is warm and inviting. Food photography, mouth-watering."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A dramatic, cinematic shot of a samurai warrior standing in the middle of a traditional Japanese street at night, with neon lights and rain. Moody, epic, and highly detailed."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A tranquil scene of a lone boat on a still lake at sunrise. The sky is filled with soft pastels, and the reflections on the water are perfect. Peaceful, natural, and serene."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A charming vintage robot with a friendly face, sitting in an old workshop, surrounded by antique tools and blueprints. Steampunk, detailed, and retrofuturistic."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A powerful dragon perched on a craggy peak, breathing fire into the stormy night sky. The scene is epic, dramatic, and filled with action. Fantasy, mythological, and intense."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A futuristic cyborg with glowing red eyes, standing in a dark, high-tech hallway. The lighting is harsh and dramatic, and the mood is tense. Cyberpunk, sci-fi, and menacing."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A fantasy warrior with a huge sword and detailed armor, standing victorious on a battlefield. The sun is setting behind them, and the scene is dramatic and victorious."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A majestic castle nestled in a misty valley at dawn. The light is soft and golden, and the scene is serene and magical. Fantasy, epic, and awe-inspiring."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A detailed shot of a glowing potion bottle on a wooden table. The potion is a vibrant purple, and the bottle is covered in intricate runes. Fantasy, magical, and detailed."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A lone wizard in a dark, ancient library, reading a glowing book. The shelves are filled with dusty tomes, and the atmosphere is mystical and quiet. Fantasy, magical, and enchanting."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A futuristic spaceship flying through a vibrant nebula. The scene is filled with bright colors and swirling gases. Sci-fi, cosmic, and epic."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A powerful female sorceress casting a spell in a dark, ancient forest. Her hands are glowing with a mystical light, and her expression is powerful. Fantasy, magical, and detailed."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A mysterious assassin in a dark alleyway at night. The lighting is moody and dramatic, and the assassin's face is obscured by a hood. Noir, cinematic, and tense."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A highly detailed, macro shot of a single eye with a glowing, sci-fi iris. The skin around the eye is textured and detailed. Cyberpunk, futuristic, and high-tech."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A beautiful, ethereal fairy with glowing wings, sitting on a mushroom in a sunlit forest. The scene is magical and whimsical. Fantasy, fairytale, and enchanting."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A dramatic shot of a giant robot standing in the middle of a destroyed city. The robot is highly detailed, and the scene is filled with smoke and rubble. Epic, action-oriented, and post-apocalyptic."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A peaceful shot of a man fishing in a still lake at sunset. The colors are warm, and the scene is tranquil and serene. Nature, calm, and photorealistic."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A high-speed shot of a futuristic motorcycle racing through a neon-lit city street at night. The colors are vibrant and dynamic, and the motion blur is intense. Sci-fi, action-oriented, and sleek."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A dramatic portrait of a man with a tattoo on his face, in a smoky, dark environment. The lighting is moody and cinematic, and his expression is intense. Artistic, cinematic, and high detail."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A beautiful, magical forest with glowing mushrooms and fireflies at night. The scene is surreal and enchanting. Fantasy, whimsical, and detailed."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A detailed, cinematic shot of a detective in a trench coat, standing in a rainy, dark city street at night. The atmosphere is moody and mysterious. Noir, dramatic, and classic."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A dramatic shot of a lone cowboy in a dusty, western town at sunset. The light is warm and golden, and the atmosphere is epic and nostalgic. Western, cinematic, and detailed."
+            },
+            {
+                image: "https://via.placeholder.com/600x600",
+                text: "A vibrant, artistic shot of a woman with colorful paint on her face, in front of a bright, abstract background. The colors are intense and the mood is creative and expressive."
+            }
+        ];
+
+        function createCard(prompt, index) {
+            const col = document.createElement('div');
+            col.className = 'col-12 col-md-6 col-lg-4 mb-4';
+
+            const card = document.createElement('div');
+            card.className = 'image-card';
+            
+            card.innerHTML = `
+                <div class="image-container">
+                    <img src="${prompt.image}" alt="AI Generated Image ${index + 1}">
+                </div>
+                <div class="prompt-text-container">
+                    <div class="prompt-text" id="prompt${index}">
+                        ${prompt.text}
+                    </div>
+                    <button class="copy-btn" onclick="copyPrompt('prompt${index}')">Copy Prompt</button>
+                </div>
+            `;
+            
+            col.appendChild(card);
+            return col;
+        }
+
+        function renderAllPrompts() {
+            const container = document.getElementById('prompts-container');
+            prompts.forEach((prompt, index) => {
+                const card = createCard(prompt, index);
+                container.appendChild(card);
+            });
+        }
+
+        function copyPrompt(promptId) {
+            const promptElement = document.getElementById(promptId);
+            const promptText = promptElement.textContent.trim();
+            
+            navigator.clipboard.writeText(promptText).then(() => {
+                alert("Prompt copied to clipboard!");
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', renderAllPrompts);
+    </script>
+</body>
+</html>
